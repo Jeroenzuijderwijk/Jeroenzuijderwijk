@@ -1,0 +1,19 @@
+---
+title: "BMS93 Python assessments"
+author: "Jeroen Zuijderwijk"
+date: "3-9-26"
+format: gfm
+jupyter: python3
+---
+
+```{python}
+print("Hello, World!")
+```
+
+#What I understand about this code, is that ```{python}``` is a code cell that allows you to write Python execute it with the "run cell" command above it. You should also end the cell by "```"
+
+#Next to this, the --- initiate the header, and ends it too. 
+
+#are used for non-code (only text, like Latex)
+
+
