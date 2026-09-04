@@ -1,0 +1,1 @@
+Well, I really hope this is the way to add a Readme.md file. I just opened VSC and created a new file which I named README.MD. I plan this push this towards the repo I just created (with my name of course, to create this README on my profile). 
