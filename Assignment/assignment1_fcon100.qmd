@@ -1,0 +1,97 @@
+
+---
+title: "Project I, fcon1000 database"
+author: "Jeroen Zuijderwijk"
+date: "2026-09-16"
+format: html
+jupyter: python3
+---
+
+
+1. How does a brain variable of choice change with age?
+2. Are there sex diferences in brain variables of choice?
+3. Do variables of choice correlate?
+
+
+
+# Q1 *How does a brain variable of choice change with age?*
+
+```{python}
+
+
+#Loading libraries:
+import pandas as pd 
+import matplotlib.pyplot as plt
+import numpy as np
+#as pd shortens it. Handy to do this for all packages, pandas for reading csv, matplotlib for graphs and figures, numpy for trend line
+brain_data = pd.read_csv("dataset/fcon1000_brain/fcon1000_tr.csv")
+#this line reads the csv file and saves it as brain_data, so we don't have to type fcon1000.csv all the time.
+print(brain_data.columns.tolist())
+#This will show all the variables I can use
+```
+```{python}
+print(brain_data.describe()) #this gives descriptive statistics of the dataset, mean, std, min, max
+print(brain_data.info()) #this gives information about the dataset, like how many rows and columns, and what type of data is in each column.
+```
+#Visualizing the data:
+```{python}
+
+x = brain_data["age"]
+y = brain_data["SurfaceHoles"]
+m, b = np.polyfit(x, y, 1)
+#m is the slope, b is the intercept. Basically this code runs y=mx+b, and the x = and y = make it easier to implement this in the plot code below.
+
+
+plt.figure(figsize=(10,6)) #10 by 6 inches felt like a good size for this plot.
+plt.scatter(x, y, alpha=0.5) #This is the marker transparancy, handy for overlapping points. Darker points are points where more data points lay.
+plt.plot(x, m*x + b, color="red", linewidth=2)
+plt.title('Surface Holes vs Age')
+plt.xlabel('Age (years)')
+plt.ylabel('Surface Holes (Counts)')
+plt.show()
+```
+
+So, to answer question 1, *How does a brain variable of choice change with age?* It The numbers of holes in the surface slightly increases with age. Slight positive correlation.
+
+# Q2 *Are there sex diferences in brain variables of choice?*
+
+```{python}
+male_data = brain_data[brain_data['sex'] == 1]['CortexVol']
+female_data = brain_data[brain_data['sex'] == 0]['CortexVol']
+#I could not find which binary number is male, and which one is female. So I looked at the mean volumes and assumed males have an on average larger mean than females. Therefore, 0=female, = male.
+
+
+print(brain_data.groupby('sex')['CortexVol'].describe())
+
+plt.boxplot([male_data, female_data])
+plt.xlabel('Sex')
+plt.xticks([1, 2], ['Male', 'Female']) #before this line it showed 1 and 2 instead male or female.
+plt.ylabel('Cortex Volume')
+plt.title('Cortex Volume Differences by Sex')
+plt.show()
+
+```
+
+So, to answer question 2, *Are there sex diferences in brain variables of choice?* Yes, on average male cortex volumes are larger than female cortex volumes (assuming the binary numbers from the dataset, 0=female, 1=male).
+
+# Q3 *Do variables of choice correlate?*
+
+```{python}
+Left_data = brain_data['lh_G_orbital_thickness']
+Right_data = brain_data['rh_G_orbital_thickness']
+
+x = brain_data["lh_G_orbital_thickness"]
+y = brain_data["rh_G_orbital_thickness"]
+m, b = np.polyfit(x, y, 1)
+#Reused what I did with Q1
+
+plt.figure(figsize=(6,6)) 
+plt.scatter(x, y, alpha=0.5) 
+plt.axis("equal") #values on the y-and x-axis were not equal (x ranged from 2.0-3.4, and y ranged from 2.2-3.8). This code should make it equal.
+plt.plot(x, m*x + b, color="red", linewidth=2)
+plt.title('Left vs Right Hemisphere, Cortical Thickness')
+plt.xlabel('Left Hemisphere')
+plt.ylabel('Right Hemisphere')
+plt.show()
+```
+So, to answer question 3, *Do variables of choice correlate?* Yes, these variables correlate quite strongly. We see a positive correlation between left and right hemisphere cortical thickness. As left hemisphere cortical thickness increases, right hemisphere cortical thickness also increases.
